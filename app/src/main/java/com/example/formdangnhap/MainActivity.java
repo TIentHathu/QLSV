@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     Button btnDangnhap;
     CheckBox cBghinho;
     SQLiteDatabase sqLiteDatabase;
-    ArrayList<String> myList;
-    ArrayAdapter myadapter;
+//    ArrayList<String> myList;
+//    ArrayAdapter myadapter;
 
     SQLiteDatabase mySQL;
     MyDatabaseHelper myHelper;
@@ -52,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
         btnDangnhap = findViewById(R.id.btndannhap);
         cBghinho = findViewById(R.id.ghinho);
         txtDangnhap = findViewById(R.id.Dangnhap);
-        myList = new ArrayList<>();
-        myadapter = new ArrayAdapter(MainActivity.this, android.R.layout.activity_list_item, myList);
+//        myList = new ArrayList<>();
+//        myadapter = new ArrayAdapter(MainActivity.this, android.R.layout.activity_list_item, myList);
         myHelper = new MyDatabaseHelper(MainActivity.this);
+
 
 
 
@@ -86,8 +87,11 @@ public class MainActivity extends AppCompatActivity {
                         // 3. Kiểm tra kết quả
                         if (cursor != null && cursor.moveToFirst()) {
 
+                            int idUserDTbase= cursor.getInt(cursor.getColumnIndex("UserID"));
+
 
                             Intent Mh2 = new Intent(MainActivity.this, trangchu.class);
+                            Mh2.putExtra("User_ID",idUserDTbase);
                             startActivity(Mh2);
                         } else if(cursor!=null) {
                             cursor.close();
@@ -121,5 +125,6 @@ public class MainActivity extends AppCompatActivity {
         snv.setBackgroundColor(Color.RED);
         sn.show();
     }
+
 
 }

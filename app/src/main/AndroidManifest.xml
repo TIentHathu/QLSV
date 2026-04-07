@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Formdangnhap">
         <activity
+            android:name=".humbergerActivity"
+            android:exported="false" />
+        <activity
             android:name=".trangchu"
             android:exported="false" />
         <activity
