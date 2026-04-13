@@ -1,5 +1,6 @@
 package com.example.formdangnhap;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,19 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
-
 public class MainActivity extends AppCompatActivity {
 
     TextView txtDangnhap;
     EditText edtTen, edtMK;
     Button btnDangnhap;
     CheckBox cBghinho;
-    SQLiteDatabase sqLiteDatabase;
-
     SQLiteDatabase mySQL;
     MyDatabaseHelper myHelper;
-
-    // Khai báo SharedPreferences
     SharedPreferences sharedPreferences;
 
     @Override
@@ -43,15 +39,14 @@ public class MainActivity extends AppCompatActivity {
         btnDangnhap = findViewById(R.id.btndannhap);
         cBghinho = findViewById(R.id.ghinho);
         txtDangnhap = findViewById(R.id.Dangnhap);
+        
         myHelper = new MyDatabaseHelper(MainActivity.this);
-
-        // Khởi tạo SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
-        // Lấy dữ liệu đã lưu và hiển thị lên giao diện
         loadSavedLoginData();
 
         btnDangnhap.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("Range")
             @Override
             public void onClick(View view) {
                 if (edtTen.getText().toString().isEmpty() || edtMK.getText().toString().isEmpty()) {
@@ -60,14 +55,12 @@ public class MainActivity extends AppCompatActivity {
                     String tendangnhap = edtTen.getText().toString().trim();
                     String mk = edtMK.getText().toString().trim();
 
-                    mySQL = myHelper.getReadableDatabase();
-
                     try {
+                        mySQL = myHelper.getReadableDatabase();
                         String sql = "SELECT * FROM tblUser_GiaoVien WHERE Email = ? AND MatKhau = ?";
                         Cursor cursor = mySQL.rawQuery(sql, new String[]{tendangnhap, mk});
 
                         if (cursor != null && cursor.moveToFirst()) {
-                            // Xử lý ghi nhớ đăng nhập khi đăng nhập thành công
                             saveLoginData(tendangnhap, mk, cBghinho.isChecked());
 
                             int idUserDTbase = cursor.getInt(cursor.getColumnIndex("UserID"));
@@ -91,13 +84,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (cBghinho.isChecked()) {
                     ThongBao(view, "Đã chọn ghi nhớ đăng nhập");
-
                 }
             }
         });
     }
 
-    // Hàm lưu thông tin đăng nhập
     private void saveLoginData(String user, String pass, boolean isChecked) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isChecked) {
@@ -105,12 +96,11 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("password", pass);
             editor.putBoolean("remember", true);
         } else {
-            editor.clear(); // Xóa hết nếu không chọn ghi nhớ
+            editor.clear();
         }
         editor.apply();
     }
 
-    // Hàm load thông tin đã lưu
     private void loadSavedLoginData() {
         boolean isRemembered = sharedPreferences.getBoolean("remember", false);
         if (isRemembered) {

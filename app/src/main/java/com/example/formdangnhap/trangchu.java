@@ -52,7 +52,7 @@ public class trangchu extends AppCompatActivity {
                 TextView txtten = dialogView.findViewById(R.id.txtten);
                 TextView txtemail = dialogView.findViewById(R.id.txtemail);
 
-                // Lấy thông tin dựa trên currentUserId thay vì số 1 cố định
+                // Lấy thông tin dựa trên currentUserId
                 Cursor cursor = myDatabaseHelper.getTenGiaovien(currentUserId);
 
                 if (cursor != null) {

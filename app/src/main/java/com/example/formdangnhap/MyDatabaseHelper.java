@@ -54,7 +54,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         // Thầy Tiến (ID 1) quản lý lớp L01
         db.execSQL("INSERT INTO tblLop VALUES ('L01', 'Công nghệ thông tin 1', 1)");
         
-        // Thầy Huy (ID 2) quản lý lớp L02 (Đã sửa: giáo viên huy quản lý lớp 2)
+        // Thầy Huy (ID 2) quản lý lớp L02
         db.execSQL("INSERT INTO tblLop VALUES ('L02', 'Hệ thống thông tin 2', 2)");
 
         // Chèn sinh viên vào lớp L01
