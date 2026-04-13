@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_marginTop="160dp"
+    tools:context=".MainActivity">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/Dangnhap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ĐĂNG NHẬP"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        />
+
+    <EditText
+        android:id="@+id/ten"
+        android:layout_width="163dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+
+        android:background="@drawable/shape_tron"
+        android:hint="ten dang nhap" />
+
+    <EditText
+        android:id="@+id/MK"
+        android:layout_width="159dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_tron"
+        android:hint="Mat khau"
+        android:inputType="textPassword" />
+
+    <CheckBox
+        android:id="@+id/ghinho"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="nhớ mật khẩu"/>
+    <Button
+        android:id="@+id/btndannhap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="đăng nhập"
+        android:backgroundTint="#007BFF"/>
+</LinearLayout>
+
+</ScrollView>
