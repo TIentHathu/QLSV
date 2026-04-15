@@ -25,6 +25,7 @@ public class SuaThongTinSVFragment extends Fragment {
     Button btnCapNhat, btnXoa;
     MyDatabaseHelper dbHelper;
     int teacherId = -1;
+    String maSV_Transfer = null;
     ArrayList<String> listMaSV;
     ArrayAdapter<String> adapterMaSV;
 
@@ -41,12 +42,12 @@ public class SuaThongTinSVFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_sua_sv, container, false);
 
-        // Hide toolbar in layout since Activity has it
         View toolbar = view.findViewById(R.id.toolbarSua);
         if (toolbar != null) toolbar.setVisibility(View.GONE);
 
         if (getArguments() != null) {
             teacherId = getArguments().getInt("User_ID");
+            maSV_Transfer = getArguments().getString("MaSV_Selected");
         }
 
         spnMaSV = view.findViewById(R.id.spnMaSV);
@@ -60,13 +61,20 @@ public class SuaThongTinSVFragment extends Fragment {
 
         loadSpinnerData();
 
+        // Nếu được chuyển từ màn hình Duyệt điểm sang, tự động chọn mã SV đó
+        if (maSV_Transfer != null) {
+            int pos = listMaSV.indexOf(maSV_Transfer);
+            if (pos >= 0) {
+                spnMaSV.setSelection(pos);
+            }
+        }
+
         spnMaSV.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String maSelected = listMaSV.get(i);
                 loadStudentDetail(maSelected);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -88,11 +96,9 @@ public class SuaThongTinSVFragment extends Fragment {
         btnXoa.setOnClickListener(v -> {
             if (spnMaSV.getSelectedItem() == null) return;
             String ma = spnMaSV.getSelectedItem().toString();
-
             dbHelper.deleteSinhVien(ma);
             dbHelper.ghiNhatKy("Xóa", "GV " + teacherId + " xóa SV " + ma);
             Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
-
             loadSpinnerData();
         });
 
@@ -108,14 +114,10 @@ public class SuaThongTinSVFragment extends Fragment {
             }
             cursor.close();
         }
-
         adapterMaSV = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, listMaSV);
         adapterMaSV.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnMaSV.setAdapter(adapterMaSV);
-
-        if (listMaSV.isEmpty()) {
-            clearFields();
-        }
+        if (listMaSV.isEmpty()) clearFields();
     }
 
     private void loadStudentDetail(String ma) {
@@ -125,7 +127,7 @@ public class SuaThongTinSVFragment extends Fragment {
             edtTen.setText(cursor.getString(1));
             edtNS.setText(cursor.getString(2));
             edtDiem.setText(String.valueOf(cursor.getInt(3)));
-            edtLop.setText(cursor.getString(4));
+            edtLop.setText(cursor.getString(5)); // Chú ý index 5 vì đã thêm DiemTuDanhGia vào giữa
         }
         cursor.close();
     }

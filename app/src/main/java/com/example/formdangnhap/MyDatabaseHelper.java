@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
     public MyDatabaseHelper(Context context) {
-        super(context, "Qlysv.db", null, 6);
+        super(context, "Qlysv.db", null, 10);
     }
 
     @Override
@@ -26,6 +26,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "HocVi TEXT, " +
                 "ChuyenMon TEXT, " +
                 "NgaySinh TEXT, " +
+                "DiaChi TEXT, " +
                 "TrangThai INTEGER)");
 
         db.execSQL("CREATE TABLE tblLop (" +
@@ -38,7 +39,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "MaSV TEXT PRIMARY KEY, " +
                 "HoTen TEXT, " +
                 "NgaySinh TEXT, " +
-                "DiemRenLuyen INTEGER, " +
+                "DiemRenLuyen INTEGER DEFAULT 0, " +
+                "DiemTuDanhGia INTEGER DEFAULT 0, " +
                 "MaLop TEXT, " +
                 "FOREIGN KEY(MaLop) REFERENCES tblLop(MaLop))");
 
@@ -48,20 +50,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "ThoiGian TEXT, " +
                 "NoiDung TEXT)");
 
-        db.execSQL("INSERT INTO tblUser_GiaoVien (HoTen, Email, MatKhau, TrangThai) VALUES ('Nguyễn Văn Tiến', 'tien@gmail.com', '123', 1)");
-        db.execSQL("INSERT INTO tblUser_GiaoVien (HoTen, Email, MatKhau, TrangThai) VALUES ('Vũ Văn Huy', 'huy@gmail.com', '123', 1)");
+        // Dữ liệu mẫu Giao Vien với địa chỉ công tác mới
+        db.execSQL("INSERT INTO tblUser_GiaoVien (HoTen, Email, MatKhau, DiaChi, TrangThai) VALUES ('Nguyễn Văn Tiến', 'tien@gmail.com', '123', '96 Định Công', 1)");
+        db.execSQL("INSERT INTO tblUser_GiaoVien (HoTen, Email, MatKhau, DiaChi, TrangThai) VALUES ('Vũ Văn Huy', 'huy@gmail.com', '123', '301 Nguyễn Trãi', 1)");
 
         db.execSQL("INSERT INTO tblLop VALUES ('L01', 'Công nghệ thông tin 1', 1)");
         db.execSQL("INSERT INTO tblLop VALUES ('L02', 'Hệ thống thông tin 2', 2)");
 
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV001', 'Trần Văn Bình', '2004-05-20', 85, 'L01')");
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV002', 'Lê Thị Hoa', '2004-08-15', 45, 'L01')");
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV003', 'Nguyễn Huy Hoàng', '2004-01-15', 70, 'L01')");
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV004', 'Nguyễn Thị Thắm', '2004-01-15', 70, 'L01')");
-
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV006', 'Phạm Minh Đức', '2005-01-10', 90, 'L02')");
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV007', 'Hoàng Thị Thu Thủy', '2005-03-22', 95, 'L02')");
-        db.execSQL("INSERT INTO tblSinhVien VALUES ('SV008', 'Nguyễn Thế Vinh', '2005-07-12', 88, 'L02')");
+        // Sinh viên mẫu (SV001 và SV006 để điểm 0 để test "Cần cập nhật")
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV001', 'Trần Văn Bình', '2004-05-20', 0, 90, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV002', 'Lê Thị Hoa', '2004-08-15', 45, 70, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV003', 'Nguyễn Huy Hoàng', '2004-01-15', 70, 80, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV006', 'Phạm Minh Đức', '2005-01-10', 0, 92, 'L02')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV007', 'Hoàng Thị Thu Thủy', '2005-03-22', 95, 95, 'L02')");
     }
 
     @Override
@@ -76,54 +77,42 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void ghiNhatKy(String hanhDong, String noiDung) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
         values.put("HanhDong", hanhDong);
-        values.put("ThoiGian", currentTime);
+        values.put("ThoiGian", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()));
         values.put("NoiDung", noiDung);
         db.insert("tblNhatKy", null, values);
     }
 
     public Cursor getAllNhatKy() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM tblNhatKy ORDER BY _id DESC", null);
+        return getReadableDatabase().rawQuery("SELECT * FROM tblNhatKy ORDER BY _id DESC", null);
     }
 
     public Cursor getSinhVienByGiaoVien(int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT s.* FROM tblSinhVien s " +
-                "JOIN tblLop l ON s.MaLop = l.MaLop " +
-                "WHERE l.UserID = ?";
-        return db.rawQuery(sql, new String[]{String.valueOf(userId)});
+        String sql = "SELECT s.* FROM tblSinhVien s JOIN tblLop l ON s.MaLop = l.MaLop WHERE l.UserID = ?";
+        return getReadableDatabase().rawQuery(sql, new String[]{String.valueOf(userId)});
     }
 
-    public boolean checkSinhVienQuanLy(String maSV, int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT 1 FROM tblSinhVien s " +
-                "JOIN tblLop l ON s.MaLop = l.MaLop " +
-                "WHERE s.MaSV = ? AND l.UserID = ?";
-        Cursor cursor = db.rawQuery(sql, new String[]{maSV, String.valueOf(userId)});
-        boolean exists = (cursor.getCount() > 0);
-        cursor.close();
-        return exists;
-    }
-
-    public void deleteSinhVien(String maSV) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("tblSinhVien", "MaSV = ?", new String[]{maSV});
-    }
-
-    public void updateSinhVien(String maSV, String ten, String ngaySinh, int diem, String maLop) {
+    public void duyetDiem(String maSV, int diemMoi) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("HoTen", ten);
-        values.put("NgaySinh", ngaySinh);
-        values.put("DiemRenLuyen", diem);
-        values.put("MaLop", maLop);
+        values.put("DiemRenLuyen", diemMoi);
         db.update("tblSinhVien", values, "MaSV = ?", new String[]{maSV});
     }
 
+    public void deleteSinhVien(String maSV) {
+        getWritableDatabase().delete("tblSinhVien", "MaSV = ?", new String[]{maSV});
+    }
+
+    public void updateSinhVien(String maSV, String ten, String ngaySinh, int diem, String maLop) {
+        ContentValues v = new ContentValues();
+        v.put("HoTen", ten);
+        v.put("NgaySinh", ngaySinh);
+        v.put("DiemRenLuyen", diem);
+        v.put("MaLop", maLop);
+        getWritableDatabase().update("tblSinhVien", v, "MaSV = ?", new String[]{maSV});
+    }
+
     public Cursor getTenGiaovien(int UserID) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM tblUser_GiaoVien WHERE UserID = ?", new String[]{String.valueOf(UserID)});
+        return getReadableDatabase().rawQuery("SELECT * FROM tblUser_GiaoVien WHERE UserID = ?", new String[]{String.valueOf(UserID)});
     }
 }

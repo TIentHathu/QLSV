@@ -19,9 +19,20 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <!-- Vùng chứa Fragment sẽ thay đổi linh hoạt -->
+            <!-- Thêm icon Home vào Toolbar -->
+            <ImageButton
+                android:id="@+id/btnBackToHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                android:src="@drawable/baseline_home_24"
+                app:tint="@android:color/white" />
+        </androidx.appcompat.widget.Toolbar>
+
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"

@@ -63,6 +63,7 @@ public class trangchu extends AppCompatActivity {
                 Button btnThoat = dialogView.findViewById(R.id.btnSignout);
                 TextView txtten = dialogView.findViewById(R.id.txtten);
                 TextView txtemail = dialogView.findViewById(R.id.txtemail);
+                TextView txtDiaChi = dialogView.findViewById(R.id.diachicongtac);
 
                 // Lấy thông tin dựa trên currentUserId
                 Cursor cursor = myDatabaseHelper.getTenGiaovien(currentUserId);
@@ -71,9 +72,13 @@ public class trangchu extends AppCompatActivity {
                     if (cursor.moveToFirst()) {
                         int tenIndex = cursor.getColumnIndex("HoTen");
                         int emailIndex = cursor.getColumnIndex("Email");
+                        int diaChiIndex = cursor.getColumnIndex("DiaChi");
                         if (tenIndex != -1 && emailIndex != -1) {
                             txtemail.setText(cursor.getString(emailIndex));
                             txtten.setText(cursor.getString(tenIndex));
+                        }
+                        if (diaChiIndex != -1) {
+                            txtDiaChi.setText(cursor.getString(diaChiIndex));
                         }
                     }
                     cursor.close();

@@ -5,14 +5,19 @@ public class SinhVien {
     private String hoTen;
     private String ngaySinh;
     private int diemRenLuyen;
+    private int diemTuDanhGia;
     private String maLop;
 
-    public SinhVien(String maSV, String hoTen, String ngaySinh, int diemRenLuyen, String maLop) {
+    public SinhVien(String maSV, String hoTen, String ngaySinh, int diemRenLuyen, int diemTuDanhGia, String maLop) {
         this.maSV = maSV;
         this.hoTen = hoTen;
         this.ngaySinh = ngaySinh;
         this.diemRenLuyen = diemRenLuyen;
+        this.diemTuDanhGia = diemTuDanhGia;
         this.maLop = maLop;
+    }
+
+    public SinhVien(String ma, String ten, String ns, int diem, String lop) {
     }
 
     public String getMaSV() {
@@ -29,6 +34,10 @@ public class SinhVien {
 
     public int getDiemRenLuyen() {
         return diemRenLuyen;
+    }
+
+    public int getDiemTuDanhGia() {
+        return diemTuDanhGia;
     }
 
     public String getMaLop() {

@@ -3,7 +3,7 @@ package com.example.formdangnhap;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +20,7 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
 
     private DrawerLayout drawerLayout;
     private int teacherId = -1;
+    private ImageButton btnBackToHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,14 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        btnBackToHome = findViewById(R.id.btnBackToHome);
+        btnBackToHome.setOnClickListener(v -> {
+            Intent intent = new Intent(humbergerActivity.this, trangchu.class);
+            intent.putExtra("User_ID", teacherId);
+            startActivity(intent);
+            finish();
+        });
+
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -40,7 +49,6 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        // Mặc định hiển thị danh sách sinh viên ngay khi vào
         if (savedInstanceState == null) {
             replaceFragment(DanhSachSVFragment.newInstance(teacherId));
             navigationView.setCheckedItem(R.id.nav_view_students);
@@ -62,9 +70,9 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
         } else if (id == R.id.nav_edit_student) {
             replaceFragment(SuaThongTinSVFragment.newInstance(teacherId));
         } else if (id == R.id.nav_assess_points) {
-            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
+            replaceFragment(DuyetDiemFragment.newInstance(teacherId));
         } else if (id == R.id.nav_stats_points) {
-            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
+            replaceFragment(ThongKeFragment.newInstance(teacherId));
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
