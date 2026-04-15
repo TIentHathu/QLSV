@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.google.android.material.card.MaterialCardView;
+
+import java.util.ArrayList;
 
 public class trangchu extends AppCompatActivity {
     ImageButton btnHome, btnSetting, btnuser;
@@ -39,6 +43,14 @@ public class trangchu extends AppCompatActivity {
         btnSetting = findViewById(R.id.btnsetting);
         cardViewQLSV = findViewById(R.id.cardViewQLSV);
         cardViewLicsu = findViewById(R.id.cardViewHistory);
+
+        // Mở nhật ký hoạt động
+        cardViewLicsu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showHistoryDialog();
+            }
+        });
 
         // Mở dialog cá nhân
         btnuser.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +95,7 @@ public class trangchu extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(trangchu.this, humbergerActivity.class);
+                intent.putExtra("User_ID", currentUserId); // Truyền ID giáo viên sang
                 startActivity(intent);
             }
         });
@@ -93,6 +106,44 @@ public class trangchu extends AppCompatActivity {
                 showSettingDialog();
             }
         });
+    }
+
+    private void showHistoryDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.layout_dialog_history, null);
+        builder.setView(dialogView);
+
+        ListView lvHistory = dialogView.findViewById(R.id.lvHistory);
+        Button btnDong = dialogView.findViewById(R.id.btnDongHistory);
+
+        ArrayList<String> historyList = new ArrayList<>();
+        Cursor cursor = myDatabaseHelper.getAllNhatKy();
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String action = cursor.getString(cursor.getColumnIndexOrThrow("HanhDong"));
+                String time = cursor.getString(cursor.getColumnIndexOrThrow("ThoiGian"));
+                String content = cursor.getString(cursor.getColumnIndexOrThrow("NoiDung"));
+                historyList.add("[" + action + "] " + time + "\n" + content);
+            }
+            cursor.close();
+        }
+
+        if (historyList.isEmpty()) {
+            historyList.add("Chưa có hoạt động nào.");
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                historyList
+        );
+
+        lvHistory.setAdapter(adapter);
+
+        AlertDialog dialog = builder.create();
+        btnDong.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     private void showSettingDialog() {

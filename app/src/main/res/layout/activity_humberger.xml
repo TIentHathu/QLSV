@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".humbergerActivity">
 
-    <!-- Nội dung chính của màn hình -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,23 +21,13 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+        <!-- Vùng chứa Fragment sẽ thay đổi linh hoạt -->
         <FrameLayout
-            android:id="@+id/content_frame"
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Chào mừng bạn đến với hệ thống quản lý sinh viên\nHãy mở menu bên trái để chọn chức năng"
-                android:textAlignment="center"
-                android:textSize="18sp" />
-        </FrameLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
-    <!-- Menu Hamburger (NavigationView) -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

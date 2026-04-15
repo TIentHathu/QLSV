@@ -11,17 +11,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
 public class humbergerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
+    private int teacherId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_humberger);
+
+        teacherId = getIntent().getIntExtra("User_ID", -1);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -34,11 +39,18 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-// mac dinh mo man hinh sinh vien
 
-         if (savedInstanceState == null) {
-             navigationView.setCheckedItem(R.id.nav_view_students);
-         }
+        // Mặc định hiển thị danh sách sinh viên ngay khi vào
+        if (savedInstanceState == null) {
+            replaceFragment(DanhSachSVFragment.newInstance(teacherId));
+            navigationView.setCheckedItem(R.id.nav_view_students);
+        }
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
     }
 
     @Override
@@ -46,21 +58,13 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.nav_view_students) {
-            Toast.makeText(this, "Mở: Xem danh sách sinh viên", Toast.LENGTH_SHORT).show();
-            // Intent intent = new Intent(this, DanhSachSVActivity.class);
-            // startActivity(intent);
+            replaceFragment(DanhSachSVFragment.newInstance(teacherId));
         } else if (id == R.id.nav_edit_student) {
-            Toast.makeText(this, "Mở: Sửa thông tin sinh viên", Toast.LENGTH_SHORT).show();
-            // Intent intent = new Intent(this, SuaThongTinSVActivity.class);
-            // startActivity(intent);
+            replaceFragment(SuaThongTinSVFragment.newInstance(teacherId));
         } else if (id == R.id.nav_assess_points) {
-            Toast.makeText(this, "Mở: Xét điểm rèn luyện", Toast.LENGTH_SHORT).show();
-            // Intent intent = new Intent(this, XetDiemRLActivity.class);
-            // startActivity(intent);
+            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_stats_points) {
-            Toast.makeText(this, "Mở: Thống kê điểm rèn luyện", Toast.LENGTH_SHORT).show();
-            // Intent intent = new Intent(this, ThongKeDiemActivity.class);
-            // startActivity(intent);
+            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_logout) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -72,5 +76,12 @@ public class humbergerActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
