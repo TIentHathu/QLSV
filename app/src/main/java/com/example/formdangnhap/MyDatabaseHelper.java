@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
     public MyDatabaseHelper(Context context) {
-        super(context, "Qlysv.db", null, 10);
+        super(context, "Qlysv.db", null, 11);
     }
 
     @Override
@@ -58,11 +58,25 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO tblLop VALUES ('L02', 'Hệ thống thông tin 2', 2)");
 
         // Sinh viên mẫu (SV001 và SV006 để điểm 0 để test "Cần cập nhật")
+
         db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV001', 'Trần Văn Bình', '2004-05-20', 0, 90, 'L01')");
         db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV002', 'Lê Thị Hoa', '2004-08-15', 45, 70, 'L01')");
         db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV003', 'Nguyễn Huy Hoàng', '2004-01-15', 70, 80, 'L01')");
         db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV006', 'Phạm Minh Đức', '2005-01-10', 0, 92, 'L02')");
         db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV007', 'Hoàng Thị Thu Thủy', '2005-03-22', 95, 95, 'L02')");
+        // Bổ sung cho lớp L01
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV004', 'Đặng Anh Tuấn', '2004-11-02', 85, 80, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV005', 'Bùi Bích Phương', '2004-02-14', 60, 75, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV008', 'Vũ Thành Nam', '2004-06-30', 0, 88, 'L01')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV009', 'Ngô Thanh Vân', '2004-09-12', 92, 90, 'L01')");
+
+// Bổ sung cho lớp L02
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV010', 'Đỗ Hữu Nghĩa', '2005-07-05', 78, 82, 'L02')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV011', 'Lý Gia Hân', '2005-12-25', 0, 95, 'L02')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV012', 'Trịnh Quốc Bảo', '2005-04-18', 88, 85, 'L02')");
+        db.execSQL("INSERT INTO tblSinhVien (MaSV, HoTen, NgaySinh, DiemRenLuyen, DiemTuDanhGia, MaLop) VALUES ('SV013', 'Mai Phương Thảo', '2005-10-01', 55, 60, 'L02')");
+
+
     }
 
     @Override
