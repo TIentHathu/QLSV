@@ -56,61 +56,68 @@ public class trangchu extends AppCompatActivity {
         btnuser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(trangchu.this);
-                View dialogView = getLayoutInflater().inflate(R.layout.layout_dialog_profile, null);
-                builder.setView(dialogView);
-
-                Button btnThoat = dialogView.findViewById(R.id.btnSignout);
-                TextView txtten = dialogView.findViewById(R.id.txtten);
-                TextView txtemail = dialogView.findViewById(R.id.txtemail);
-                TextView txtDiaChi = dialogView.findViewById(R.id.diachicongtac);
-
-                // Lấy thông tin dựa trên currentUserId
-                Cursor cursor = myDatabaseHelper.getTenGiaovien(currentUserId);
-
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        int tenIndex = cursor.getColumnIndex("HoTen");
-                        int emailIndex = cursor.getColumnIndex("Email");
-                        int diaChiIndex = cursor.getColumnIndex("DiaChi");
-                        if (tenIndex != -1 && emailIndex != -1) {
-                            txtemail.setText(cursor.getString(emailIndex));
-                            txtten.setText(cursor.getString(tenIndex));
-                        }
-                        if (diaChiIndex != -1) {
-                            txtDiaChi.setText(cursor.getString(diaChiIndex));
-                        }
-                    }
-                    cursor.close();
-                }
-
-                AlertDialog dialog = builder.create();
-
-                btnThoat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showLogoutDialog();
-                    }
-                });
-                dialog.show();
+                showProfileDialog();
             }
         });
 
+        // Mở quản lý sinh viên
         cardViewQLSV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(trangchu.this, humbergerActivity.class);
-                intent.putExtra("User_ID", currentUserId); // Truyền ID giáo viên sang
+                intent.putExtra("User_ID", currentUserId);
                 startActivity(intent);
             }
         });
 
+        // Mở cài đặt
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showSettingDialog();
             }
         });
+
+        // Nút Home
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(trangchu.this, "Bạn đang ở Trang chủ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showProfileDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(trangchu.this);
+        View dialogView = getLayoutInflater().inflate(R.layout.layout_dialog_profile, null);
+        builder.setView(dialogView);
+
+        Button btnThoat = dialogView.findViewById(R.id.btnSignout);
+        TextView txtten = dialogView.findViewById(R.id.txtten);
+        TextView txtemail = dialogView.findViewById(R.id.txtemail);
+        TextView txtDiaChi = dialogView.findViewById(R.id.diachicongtac);
+
+        Cursor cursor = myDatabaseHelper.getTenGiaovien(currentUserId);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int tenIndex = cursor.getColumnIndex("HoTen");
+                int emailIndex = cursor.getColumnIndex("Email");
+                int diaChiIndex = cursor.getColumnIndex("DiaChi");
+                if (tenIndex != -1) txtten.setText(cursor.getString(tenIndex));
+                if (emailIndex != -1) txtemail.setText(cursor.getString(emailIndex));
+                if (diaChiIndex != -1) txtDiaChi.setText(cursor.getString(diaChiIndex));
+            }
+            cursor.close();
+        }
+
+        AlertDialog dialog = builder.create();
+        btnThoat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLogoutDialog();
+            }
+        });
+        dialog.show();
     }
 
     private void showHistoryDialog() {
@@ -123,7 +130,6 @@ public class trangchu extends AppCompatActivity {
 
         ArrayList<String> historyList = new ArrayList<>();
         Cursor cursor = myDatabaseHelper.getAllNhatKy();
-
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 String action = cursor.getString(cursor.getColumnIndexOrThrow("HanhDong"));
@@ -134,20 +140,18 @@ public class trangchu extends AppCompatActivity {
             cursor.close();
         }
 
-        if (historyList.isEmpty()) {
-            historyList.add("Chưa có hoạt động nào.");
-        }
+        if (historyList.isEmpty()) historyList.add("Chưa có hoạt động nào.");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                historyList
-        );
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, historyList);
         lvHistory.setAdapter(adapter);
 
         AlertDialog dialog = builder.create();
-        btnDong.setOnClickListener(v -> dialog.dismiss());
+        btnDong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
@@ -155,8 +159,8 @@ public class trangchu extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(trangchu.this);
         View diaglogView = getLayoutInflater().inflate(R.layout.layout_setting_dialog, null);
         builder.setView(diaglogView);
-        
-        Button btnLuu_trang_thai = diaglogView.findViewById(R.id.btnluusetting);
+
+        Button btnLuu = diaglogView.findViewById(R.id.btnluusetting);
         SwitchCompat swDarkMode = diaglogView.findViewById(R.id.switchDarkMode);
         SwitchCompat swThongbao = diaglogView.findViewById(R.id.switchThongbao);
 
@@ -165,7 +169,7 @@ public class trangchu extends AppCompatActivity {
         swThongbao.setChecked(pref.getBoolean("notify", true));
 
         AlertDialog dialog = builder.create();
-        btnLuu_trang_thai.setOnClickListener(new View.OnClickListener() {
+        btnLuu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean isDark = swDarkMode.isChecked();
@@ -174,11 +178,7 @@ public class trangchu extends AppCompatActivity {
                 editor.putBoolean("notify", swThongbao.isChecked());
                 editor.apply();
 
-                if (isDark) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
+                AppCompatDelegate.setDefaultNightMode(isDark ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
                 dialog.dismiss();
                 Toast.makeText(trangchu.this, "Đã lưu cài đặt!", Toast.LENGTH_SHORT).show();
             }

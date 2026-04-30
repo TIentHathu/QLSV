@@ -61,7 +61,6 @@ public class SuaThongTinSVFragment extends Fragment {
 
         loadSpinnerData();
 
-        // Nếu được chuyển từ màn hình Duyệt điểm sang, tự động chọn mã SV đó
         if (maSV_Transfer != null) {
             int pos = listMaSV.indexOf(maSV_Transfer);
             if (pos >= 0) {
@@ -80,26 +79,32 @@ public class SuaThongTinSVFragment extends Fragment {
             }
         });
 
-        btnCapNhat.setOnClickListener(v -> {
-            if (spnMaSV.getSelectedItem() == null) return;
-            String ma = spnMaSV.getSelectedItem().toString();
-            String ten = edtTen.getText().toString().trim();
-            String ns = edtNS.getText().toString().trim();
-            String diemStr = edtDiem.getText().toString().trim();
-            String lop = edtLop.getText().toString().trim();
+        btnCapNhat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (spnMaSV.getSelectedItem() == null) return;
+                String ma = spnMaSV.getSelectedItem().toString();
+                String ten = edtTen.getText().toString().trim();
+                String ns = edtNS.getText().toString().trim();
+                String diemStr = edtDiem.getText().toString().trim();
+                String lop = edtLop.getText().toString().trim();
 
-            dbHelper.updateSinhVien(ma, ten, ns, Integer.parseInt(diemStr), lop);
-            dbHelper.ghiNhatKy("Cập nhật", "GV " + teacherId + " sửa SV " + ma);
-            Toast.makeText(getContext(), "Đã cập nhật!", Toast.LENGTH_SHORT).show();
+                dbHelper.updateSinhVien(ma, ten, ns, Integer.parseInt(diemStr), lop);
+                dbHelper.ghiNhatKy("Cập nhật", "GV " + teacherId + " sửa SV " + ma);
+                Toast.makeText(getContext(), "Đã cập nhật!", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        btnXoa.setOnClickListener(v -> {
-            if (spnMaSV.getSelectedItem() == null) return;
-            String ma = spnMaSV.getSelectedItem().toString();
-            dbHelper.deleteSinhVien(ma);
-            dbHelper.ghiNhatKy("Xóa", "GV " + teacherId + " xóa SV " + ma);
-            Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
-            loadSpinnerData();
+        btnXoa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (spnMaSV.getSelectedItem() == null) return;
+                String ma = spnMaSV.getSelectedItem().toString();
+                dbHelper.deleteSinhVien(ma);
+                dbHelper.ghiNhatKy("Xóa", "GV " + teacherId + " xóa SV " + ma);
+                Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
+                loadSpinnerData();
+            }
         });
 
         return view;
@@ -127,7 +132,7 @@ public class SuaThongTinSVFragment extends Fragment {
             edtTen.setText(cursor.getString(1));
             edtNS.setText(cursor.getString(2));
             edtDiem.setText(String.valueOf(cursor.getInt(3)));
-            edtLop.setText(cursor.getString(5)); // Chú ý index 5 vì đã thêm DiemTuDanhGia vào giữa
+            edtLop.setText(cursor.getString(5));
         }
         cursor.close();
     }

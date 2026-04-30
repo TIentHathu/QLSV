@@ -82,7 +82,7 @@ public class DuyetDiemFragment extends Fragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_duyet_diem, parent, false);
             }
-            SinhVien sv = getItem(position);
+            final SinhVien sv = getItem(position);
             ((TextView) convertView.findViewById(R.id.txtDuyetTen)).setText(sv.getHoTen());
             ((TextView) convertView.findViewById(R.id.txtDuyetInfo)).setText("Mã: " + sv.getMaSV() + " - Lớp: " + sv.getMaLop());
 
@@ -90,24 +90,30 @@ public class DuyetDiemFragment extends Fragment {
             String diemHTText = (sv.getDiemRenLuyen() == 0) ? "Cần cập nhật" : String.valueOf(sv.getDiemRenLuyen());
             ((TextView) convertView.findViewById(R.id.txtDuyetDiemTuCham)).setText("Điểm tự đánh giá: " + sv.getDiemTuDanhGia() + " | Hệ thống: " + diemHTText);
 
-            convertView.findViewById(R.id.btnChapNhan).setOnClickListener(v -> {
-                dbHelper.duyetDiem(sv.getMaSV(), sv.getDiemTuDanhGia());
-                dbHelper.ghiNhatKy("Duyệt điểm", "Chấp nhận điểm cho SV " + sv.getMaSV());
-                Toast.makeText(getContext(), "Đã cập nhật điểm hệ thống!", Toast.LENGTH_SHORT).show();
-                loadData(); // Load lại để hiển thị điểm mới
+            convertView.findViewById(R.id.btnChapNhan).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dbHelper.duyetDiem(sv.getMaSV(), sv.getDiemTuDanhGia());
+                    dbHelper.ghiNhatKy("Duyệt điểm", "Chấp nhận điểm cho SV " + sv.getMaSV());
+                    Toast.makeText(getContext(), "Đã cập nhật điểm hệ thống!", Toast.LENGTH_SHORT).show();
+                    loadData(); // Load lại để hiển thị điểm mới
+                }
             });
 
-            convertView.findViewById(R.id.btnSuaDiem).setOnClickListener(v -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("User_ID", teacherId);
-                bundle.putString("MaSV_Selected", sv.getMaSV());
+            convertView.findViewById(R.id.btnSuaDiem).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("User_ID", teacherId);
+                    bundle.putString("MaSV_Selected", sv.getMaSV());
 
-                SuaThongTinSVFragment suaFrag = new SuaThongTinSVFragment();
-                suaFrag.setArguments(bundle);
+                    SuaThongTinSVFragment suaFrag = new SuaThongTinSVFragment();
+                    suaFrag.setArguments(bundle);
 
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, suaFrag)
-                        .commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, suaFrag)
+                            .commit();
+                }
             });
 
             return convertView;
