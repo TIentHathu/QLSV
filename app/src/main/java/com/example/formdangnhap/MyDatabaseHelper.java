@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
     public MyDatabaseHelper(Context context) {
-        super(context, "Qlysv.db", null, 11);
+        super(context, "Qlysv.db", null, 13);
     }
 
     @Override
@@ -124,6 +124,29 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         v.put("DiemRenLuyen", diem);
         v.put("MaLop", maLop);
         getWritableDatabase().update("tblSinhVien", v, "MaSV = ?", new String[]{maSV});
+    }
+
+    public boolean insertSinhVien(String maSV, String hoTen, String ngaySinh,
+                                  int diemRenLuyen, String maLop) {
+        // BƯỚC 1: Kiểm tra mã SV đã tồn tại chưa
+        Cursor check = getReadableDatabase().rawQuery(
+                "SELECT MaSV FROM tblSinhVien WHERE MaSV = ?", new String[]{maSV});
+        boolean exists = check.getCount() > 0;
+        check.close();
+        if (exists) return false; // Trả về false → Fragment hiển thị lỗi
+
+        // BƯỚC 2: Insert bản ghi mới
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("MaSV", maSV);
+        values.put("HoTen", hoTen);
+        values.put("NgaySinh", ngaySinh);
+        values.put("DiemRenLuyen", diemRenLuyen); // Truyền vào 0
+        values.put("DiemTuDanhGia", 0);             // Mặc định 0, SV tự cập nhật sau
+        values.put("MaLop", maLop);
+
+        long result = db.insert("tblSinhVien", null, values);
+        return result != -1; // Trả về true nếu insert thành công
     }
 
     public Cursor getTenGiaovien(int UserID) {

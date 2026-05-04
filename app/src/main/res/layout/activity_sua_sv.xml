@@ -13,7 +13,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="Sửa thông tin sinh viên" />
+        app:title="Sửa / Thêm sinh viên" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,25 +25,29 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- ═══════════ PHẦN SỬA / XÓA ═══════════ -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:text="✏️  Sửa / Xóa sinh viên"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Chọn mã sinh viên:"
-                android:textSize="16sp" />
+                android:layout_marginBottom="4dp"
+                android:textSize="14sp" />
 
             <Spinner
                 android:id="@+id/spnMaSV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="12dp"
                 android:minHeight="48dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="20dp"
-                android:background="@android:color/darker_gray" />
 
             <EditText
                 android:id="@+id/edtSuaTen"
@@ -64,10 +68,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="Điểm rèn luyện"
+                android:hint="Điểm rèn luyện (0 – 100)"
                 android:inputType="number" />
 
-            <!-- Ẩn mã lớp đi vì không cần nhập nữa -->
+            <!-- Hidden: MaLop được load tự động từ DB -->
             <EditText
                 android:id="@+id/edtSuaLop"
                 android:layout_width="match_parent"
@@ -84,8 +88,8 @@
                     android:id="@+id/btnCapNhat"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:text="Cập nhật" />
 
                 <Button
@@ -97,6 +101,103 @@
                     android:text="Xóa"
                     android:textColor="@android:color/white" />
             </LinearLayout>
+
+            <!-- Đường kẻ phân cách -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray" />
+
+            <!-- ═══════════ PHẦN THÊM MỚI ═══════════ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="➕  Thêm sinh viên mới"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Mã SV -->
+            <EditText
+                android:id="@+id/edtThemMa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mã SV (VD: SV014)"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/txtMaError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- Họ và tên -->
+            <EditText
+                android:id="@+id/edtThemTen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Họ và tên"
+                android:inputType="textPersonName"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/txtTenError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- Ngày sinh -->
+            <EditText
+                android:id="@+id/edtThemNS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ngày sinh (YYYY-MM-DD)"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/txtNSError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <!-- Chọn lớp (Spinner tự load lớp của GV) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Chọn lớp:"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/spnThemLop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:minHeight="48dp" />
+
+            <Button
+                android:id="@+id/btnThem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#388E3C"
+                android:text="➕  Thêm sinh viên"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
